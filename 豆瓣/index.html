@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0"/>
+		<title>豆瓣市集</title>
+		<link rel="stylesheet" href="swiper-4.5.0/dist/css/swiper.css">
+		<script src="swiper-4.5.0/dist/js/swiper.min.js"></script>
+		<script src="jquery-3.4.1.min.js"></script>
+		
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html{
+				font-size: 62.5%;
+			}
+			.swiper-slide{
+				height: 40rem;
+				background:red;
+				float: left;
+			}
+			.all{
+				width: 100%;
+				height: 1000rem;
+				background: #EEEEEE;
+			}
+			.user-bar-cart, .user-bar-people{
+				float: left;
+				background: #FFFFFF;
+				width: 50%;
+				height: 10rem;
+				font-size: 5rem;
+				text-align: center;
+				line-height: 10rem;
+				color: black;
+			}
+			.swiper-slide img{
+				width: 100%;
+				height: 40rem;
+			}
+			.product-list{
+			    background-color: #fff;
+			    margin-top: 5rem;
+			    float: left;
+			    height: 500rem;
+			    width: 100%;
+			}
+			.product-list-header{
+				width: 100%;
+				height: 10rem;
+				font-size: 5rem;
+				float: left;
+			}
+			.product-list-content{
+				width: 96%;
+				height: 200rem;
+				margin-left: 2%;
+				float: left;
+			}
+			.product-list-item{
+				list-style: none;
+			    width: 50%;
+			    float: left;
+			    height: 55rem;
+			}
+			.product-card{
+				width: 94%;
+				height: 52rem;
+				margin-left: 3%;
+			}
+			.product-card img{
+				width: 100%;
+				height: 70%;
+			}
+			.product-card-title{
+				font-size: 4rem;
+				color: #3e3a39;
+			}
+			.product-card-desc{
+				font-size: 3.5rem;
+				margin-top: 1rem;
+				color: #ababac;
+			}
+			.product-card-bottom{
+				font-size: 3.5rem;
+				margin-top: 1rem;
+			}
+			.product-card-tag{
+			    color: rgb(70, 166, 143);
+				border-color: rgb(70, 166, 143);
+				border: 0.2rem solid #44883e;
+				padding: 0 1rem;
+			}
+			.product-card-promote{
+				color: red;
+			}
+			.xinpin{
+				margin-left: 3rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="all">
+			<div class="swiper-container">
+			  <div class="swiper-wrapper">
+					
+			  </div>
+			   <div class="swiper-pagination"></div>
+			</div>
+			<div class="user-bar">
+				<div class="user-bar-cart">购物车</div>
+				<div class="user-bar-people">我的豆品</div>
+			</div>
+			<div class="product-list">
+				<div class="product-list-header">
+					<div class="xinpin">新品首发</div>
+				</div>
+				<ul class="product-list-content"></ul>
+			</div>
+		</div>
+		<script>
+			var token=window.localStorage.getItem("token");
+			console.log(token)
+			$(".user-bar-cart").click(function(){
+				if(token==null){
+					location.href="logoin.html"
+				}else{
+					location.href="shop.html"
+				}
+			})
+			var mySwiper = new Swiper('.swiper-container', {
+				autoplay: true,//可选选项，自动滑动
+				observer:true,
+				pagination: {
+	                el: '.swiper-pagination',
+	   				type: 'bullets',
+	            },
+			})
+			
+			$.ajax({
+				type:"GET",
+				url:"http://shop.com/index.php/index/goods/index",
+				dataType:'json',
+				success:function(res){
+//					console.log(res)
+					var str="";
+					for(var i=0;i<res.data.banner.length;i++){
+						str+='<div class="swiper-slide"><img src="'+res.data.banner[i].img+'"/></div>'	
+					}
+					$(".swiper-wrapper").append(str);
+					
+					
+					
+					var data="";
+					for(var i=0;i<res.data.goods.length;i++){
+//						console.log(res.data.goods[i])
+						data+='<a href="detail.html?id='+res.data.goods[i].id+'"><li class="product-list-item"><div class="product-card"><img src="'+res.data.goods[i].img+'" /><div class="product-card-title">'+res.data.goods[i].title+'</div><div class="product-card-desc">'+res.data.goods[i].desc+'</div><div class="product-card-bottom"><span class="product-card-promote">'+res.data.goods[i].price+'</span>&nbsp;&nbsp;<span class="product-card-tag">新品上市</span></div></div></li></a>'
+					}
+					$(".product-list-content").append(data);
+				}
+			});
+			
+		</script>
+				
+	</body>
+</html>
